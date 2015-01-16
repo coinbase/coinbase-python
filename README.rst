@@ -1,9 +1,26 @@
 Coinbase
 ========
 
+.. image:: https://pypip.in/version/coinbase/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/coinbase
+
+.. image:: https://img.shields.io/travis/coinbase/coinbase-python/master.svg?style=flat
+    :target: https://travis-ci.org/coinbase/coinbase-python
+
+.. image:: https://pypip.in/download/coinbase/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/coinbase/
+
+.. image:: https://pypip.in/wheel/blackhole/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/coinbase/
+
+.. image:: https://pypip.in/py_versions/coinbase/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/coinbase/
+
+.. image:: https://pypip.in/license/blackhole/badge.svg?style=flat
+    :target: https://pypi.python.org/pypi/coinbase/
+
 The official Python library for the `Coinbase API
 <https://developers.coinbase.com/api>`_.
-
 
 Features
 --------

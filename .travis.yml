@@ -11,6 +11,6 @@ env:
   - TOXENV=py34
 
 install:
-  - "pip install tox --user-mirrors"
+  - "pip install tox --use-mirrors"
 
 script: tox
