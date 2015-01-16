@@ -3,7 +3,7 @@ import os
 from setuptools import setup
 import coinbase
 
-README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
+README = open(os.path.join(os.path.dirname(__file__), 'PYPIREADME.rst')).read()
 REQUIREMENTS = [
     line.strip() for line in open(os.path.join(os.path.dirname(__file__),
                                                'requirements.txt')).readlines()]
