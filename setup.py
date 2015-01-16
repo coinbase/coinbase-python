@@ -14,7 +14,7 @@ setup(
     packages=['coinbase'],
     include_package_data=True,
     license='MIT License',
-    description='OAuth 2.0 server implementation.',
+    description='Coinbase API client library',
     long_description=README,
     url='https://github.com/coinbase/coinbase-python/',
     download_url='https://github.com/coinbase/coinbase-python/tarball/%s' % (

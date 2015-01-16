@@ -1,5 +1,5 @@
 Coinbase
-===============
+========
 
 The official Python library for the `Coinbase API
 <https://developers.coinbase.com/api>`_.
@@ -7,6 +7,7 @@ The official Python library for the `Coinbase API
 
 Features
 --------
+
 * Near-100% test coverage.
 * Support for both `API Key + Secret
   <https://coinbase.com/docs/api/authentication#hmac>`_ and `OAuth 2
@@ -14,37 +15,27 @@ Features
 * Convenient methods for making calls to the API - packs JSON for you!
 * Automatic parsing of API responses into relevant Python objects.
 * All objects have tab-completable methods and attributes when using
-  `IPython <ipython.org>`_.
+  `IPython <http://ipython.org>`_.
 
 
 Installation
 ------------
 
-..
-    `coinbase` is available on `PYPI <https://pypi.python.org/pypi/coinbase/>`_.
-    Install with ``pip``:
-    
-    .. code:: bash
-    
-        pip install coinbase
-    
-    or with ``easy_install``:
-    
-    .. code:: bash
-    
-        easy_install coinbase
-    
-    The library is currently tested against Python versions 2.6.9, 2.7.9, 3.2,
-    3.3.6, and 3.4.2.
-
-`coinbase` is still in preview, so installation requires installing from
-source:
+`coinbase` is available on `PYPI <https://pypi.python.org/pypi/coinbase/>`_.
+Install with ``pip``:
 
 .. code:: bash
 
-    git clone git@github.cbhq.net:engineering/coinbase-python.git
-    cd coinbase-python
-    pip install -e .
+    pip install coinbase
+
+or with ``easy_install``:
+
+.. code:: bash
+
+    easy_install coinbase
+
+The library is currently tested against Python versions 2.6.9, 2.7.9, 3.2,
+3.3.6, and 3.4.2.
 
 
 Quick Start
@@ -80,7 +71,6 @@ these credentials, create a client:
 
     from coinbase.client import OAuthClient
     client = OAuthClient(client_id, client_secret, access_token, refresh_token)
-
 
 Making API Calls
 ^^^^^^^^^^^^^^^^
@@ -183,6 +173,7 @@ the API, with some niceties like pretty-printing and attr-style item access
 
 Error Handling
 ^^^^^^^^^^^^^^
+
 All errors occuring during interaction with the API will be raise as
 exceptions.  These exceptions will be subclasses of
 ``coinbase.error.CoinbaseError``. When the error involves an API request and/or
@@ -192,6 +183,7 @@ failed interaction.
 
 OAuth Access Token Refreshing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 When using the ``coinbase.client.OAuthClient``, the access token being used
 to authenticate you may expire. Should this happen, a ``coinbase.error.ExpiredAccessToken``
 exception will be raised. The ``coinbase.client.OAuthClient`` provides a convenient
