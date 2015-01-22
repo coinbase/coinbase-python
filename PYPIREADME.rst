@@ -38,7 +38,7 @@ Features
 For more information, please `visit the Github repository
 <https://github.com/coinbase/coinbase-python>`_.
 
-*Note: this package name to refer to the unofficial* ``coinbase_python``
+*Note: this package name used to refer to the unofficial* ``coinbase_python``
 *library maintained by* `George Sibble <http://onepercentbreadsticks.com/>`_ *.
 George graciously allowed us to use the name for this package instead. You can
 still find that package* `on Github
