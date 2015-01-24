@@ -414,29 +414,30 @@ class TestOauthClient(unittest2.TestCase):
   def test_response_handling(self):
     resp200 = lambda r, u, h: (200, h, '')
     resp400 = lambda r, u, h: (400, h, '')
+    header_template = (
+        'Bearer realm="Doorkeeper" error="{id}" error_description="{error}')
     def resp401_expired(request, uri, headers):
-      headers.update({
-          'www-authenticate': (
-            'Bearer realm="Doorkeeper", '
-            'error="invalid_token", '
-            'error_description="The access token expired"')})
-      return (401, headers, '')
+      error_data = {
+          'id': 'invalid_token',
+          'error': 'The access token expired',
+        }
+      headers.update({'www-authenticate': header_template.format(**error_data)})
+      return (401, headers, json.dumps(error_data))
     def resp401_invalid(request, uri, headers):
-      headers.update({
-          'www-authenticate': (
-            'Bearer realm="Doorkeeper", '
-            'error="invalid_token", '
-            'error_description="The access token is invalid"')})
-      return (401, headers, '')
+      error_data = {
+          'id': 'invalid_token',
+          'error': 'The access token is invalid',
+        }
+      headers.update({'www-authenticate': header_template.format(**error_data)})
+      return (401, headers, json.dumps(error_data))
     def resp401_generic(request, uri, headers):
-      headers.update({
-          'www-authenticate': (
-            'Bearer realm="Doorkeeper", '
-            'error="some_error", '
-            'error_description="Some description"')})
-      return (401, headers, '')
-    def resp401_noheader(request, uri, headers):
-      self.assertIsNone(headers.get('www-authenticate'))
+      error_data = {
+          'id': 'some_error',
+          'error': 'Some description',
+        }
+      headers.update({'www-authenticate': header_template.format(**error_data)})
+      return (401, headers, json.dumps(error_data))
+    def resp401_nobody(request, uri, headers):
       return (401, headers, '')
     resp402 = lambda r, u, h: (402, h, '')
 
@@ -445,7 +446,7 @@ class TestOauthClient(unittest2.TestCase):
     hp.register_uri(hp.GET, re.compile('.*401_expired$'), resp401_expired)
     hp.register_uri(hp.GET, re.compile('.*401_invalid$'), resp401_invalid)
     hp.register_uri(hp.GET, re.compile('.*401_generic$'), resp401_generic)
-    hp.register_uri(hp.GET, re.compile('.*401_noheader$'), resp401_noheader)
+    hp.register_uri(hp.GET, re.compile('.*401_nobody$'), resp401_nobody)
     hp.register_uri(hp.GET, re.compile('.*402$'), resp402)
 
     client = OAuthClient(client_id, client_secret, access_token, refresh_token)
@@ -459,7 +460,7 @@ class TestOauthClient(unittest2.TestCase):
     with self.assertRaises(ExpiredAccessToken):
       client._get('401_expired')
     with self.assertRaises(AuthenticationError):
-      client._get('401_noheader')
+      client._get('401_nobody')
     with self.assertRaises(TwoFactorTokenRequired):
       client._get('402')
 

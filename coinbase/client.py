@@ -4,7 +4,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import re
 import requests
 import warnings
 
@@ -318,10 +317,9 @@ class OAuthClient(Client):
     if response.status_code != 401:
       return super(OAuthClient, self)._handle_response(response)
 
-    auth_header = response.headers.get('www-authenticate', None)
-    details = auth_header and _parse_authenticate_header(auth_header)
-    if details and details.get('error') == 'invalid_token':
-      if 'expired' in details.get('error_description', ''):
+    error_details = _parse_authentication_error(response)
+    if error_details and error_details.get('id') == 'invalid_token':
+      if 'expired' in error_details.get('error', ''):
         raise build_api_error(ExpiredAccessToken, response)
       raise build_api_error(InvalidAccessToken, response)
     raise build_api_error(AuthenticationError, response)
@@ -353,5 +351,8 @@ class OAuthClient(Client):
     return data
 
 
-def _parse_authenticate_header(header):
-   return dict(re.findall('([a-zA-Z\_]+)\=\"(.*?)\"', header))
+def _parse_authentication_error(response):
+  try:
+    return response.json()
+  except ValueError:
+    return {}
