@@ -415,7 +415,7 @@ class TestOauthClient(unittest2.TestCase):
     resp200 = lambda r, u, h: (200, h, '')
     resp400 = lambda r, u, h: (400, h, '')
     header_template = (
-        'Bearer realm="Doorkeeper" error="{id}" error_description="{error}')
+        'Bearer realm="Doorkeeper" error="{id}" error_description="{error}"')
     def resp401_expired(request, uri, headers):
       error_data = {
           'id': 'invalid_token',
@@ -439,6 +439,15 @@ class TestOauthClient(unittest2.TestCase):
       return (401, headers, json.dumps(error_data))
     def resp401_nobody(request, uri, headers):
       return (401, headers, '')
+    def resp401_header_expired(request, uri, headers):
+      code, headers, _ = resp401_expired(request, uri, headers)
+      return (code, headers, '')
+    def resp401_header_invalid(request, uri, headers):
+      code, headers, _ = resp401_invalid(request, uri, headers)
+      return (code, headers, '')
+    def resp401_header_generic(request, uri, headers):
+      code, headers, _ = resp401_generic(request, uri, headers)
+      return (code, headers, '')
     resp402 = lambda r, u, h: (402, h, '')
 
     hp.register_uri(hp.GET, re.compile('.*200$'), resp200)
@@ -447,6 +456,9 @@ class TestOauthClient(unittest2.TestCase):
     hp.register_uri(hp.GET, re.compile('.*401_invalid$'), resp401_invalid)
     hp.register_uri(hp.GET, re.compile('.*401_generic$'), resp401_generic)
     hp.register_uri(hp.GET, re.compile('.*401_nobody$'), resp401_nobody)
+    hp.register_uri(hp.GET, re.compile('.*401_header_expired$'), resp401_header_expired)
+    hp.register_uri(hp.GET, re.compile('.*401_header_invalid$'), resp401_header_invalid)
+    hp.register_uri(hp.GET, re.compile('.*401_header_generic$'), resp401_header_generic)
     hp.register_uri(hp.GET, re.compile('.*402$'), resp402)
 
     client = OAuthClient(client_id, client_secret, access_token, refresh_token)
@@ -455,10 +467,16 @@ class TestOauthClient(unittest2.TestCase):
       client._get('400')
     with self.assertRaises(AuthenticationError):
       client._get('401_generic')
+    with self.assertRaises(AuthenticationError):
+      client._get('401_header_generic')
     with self.assertRaises(InvalidAccessToken):
       client._get('401_invalid')
+    with self.assertRaises(InvalidAccessToken):
+      client._get('401_header_invalid')
     with self.assertRaises(ExpiredAccessToken):
       client._get('401_expired')
+    with self.assertRaises(ExpiredAccessToken):
+      client._get('401_header_expired')
     with self.assertRaises(AuthenticationError):
       client._get('401_nobody')
     with self.assertRaises(TwoFactorTokenRequired):

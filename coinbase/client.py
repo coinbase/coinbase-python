@@ -4,6 +4,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import re
 import requests
 import warnings
 
@@ -355,4 +356,16 @@ def _parse_authentication_error(response):
   try:
     return response.json()
   except ValueError:
-    return {}
+    pass
+  auth_header = response.headers.get('www-authenticate', None)
+  print('auth header:', repr(auth_header))
+  if auth_header:
+    header_data = dict(re.findall('([a-zA-Z\_]+)\=\"(.*?)\"', auth_header))
+    id_ = header_data.get('error')
+    err_ = header_data.get('error_description')
+    print(header_data)
+    print(id_, err_)
+    if not (id_ and err_):
+      return None
+    return {'id': id_, 'error': err_}
+  return None
