@@ -181,6 +181,13 @@ class Client(object):
           'Could not parse API response')
     return account
 
+  def redeem_token(self, tokenId):
+      data = encode_params({
+              'token_id': tokenId})
+      response = self._post('tokens/redeem', data=data)
+      api_obj = self._make_api_object(response.json())
+      return api_obj.get('success', False)
+
   def get_contacts(self, page=None, limit=None, all_accounts=None):
     """https://developers.coinbase.com/api#contacts"""
     data = encode_params({
