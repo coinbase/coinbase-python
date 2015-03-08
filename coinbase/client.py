@@ -181,9 +181,9 @@ class Client(object):
           'Could not parse API response')
     return account
 
-  def redeem_token(self, tokenId):
+  def redeem_token(self, token_id):
       data = encode_params({
-              'token_id': tokenId})
+              'token_id': token_id})
       response = self._post('tokens/redeem', data=data)
       api_obj = self._make_api_object(response.json())
       return api_obj.get('success', False)
