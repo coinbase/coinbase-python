@@ -190,6 +190,25 @@ class TestClient(unittest2.TestCase):
     self.assertIsInstance(account, Account)
 
   @hp.activate
+  def test_redeem_token(self):
+    def server_response(request, uri, headers):
+      try: request_data = json.loads(request.body.decode())
+      except ValueError: raise AssertionError("request body was malformed.")
+      token_id = request_data.get('token_id')
+      assert isinstance(token_id, six.text_type)
+      return (200, headers, json.dumps(data))
+
+    client = Client(api_key, api_secret)
+    hp.register_uri(hp.POST, re.compile('.*'), body=server_response)
+
+    data = {'success': False}
+    assert False == client.redeem_token('token1')
+
+    data = {'success': True}
+    assert True == client.redeem_token('token2')
+
+
+  @hp.activate
   def test_get_contacts(self):
     def server_response(request, uri, headers):
       try: json.loads(request.body.decode())
