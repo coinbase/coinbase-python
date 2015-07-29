@@ -1,0 +1,2 @@
+requests>=2.5
+six>=1.9

@@ -1,0 +1,7 @@
+include Makefile
+include LICENSE
+include README.rst
+include PYPIREADME.rst
+include setup.py
+include *requirements.txt
+graft tests
