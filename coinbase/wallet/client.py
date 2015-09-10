@@ -4,9 +4,11 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import base64
 import os
 import re
 import requests
+import six
 import warnings
 
 from coinbase.wallet.auth import HMACAuth
@@ -33,9 +35,15 @@ from coinbase.wallet.model import new_api_object
 from coinbase.wallet.util import check_uri_security
 from coinbase.wallet.util import encode_params
 
+from Crypto.Hash import SHA256
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
 
 COINBASE_CRT_PATH = os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'ca-coinbase.crt')
+
+COINBASE_CALLBACK_PUBLIC_KEY_PATH = os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'coinbase-callback.pub')
 
 
 class Client(object):
@@ -56,6 +64,8 @@ class Client(object):
 
   BASE_API_URI = 'https://api.coinbase.com/'
   API_VERSION = '2015-06-16'
+
+  cached_callback_public_key = None
 
   def __init__(self, api_key, api_secret, base_api_uri=None):
     if not api_key:
@@ -514,6 +524,22 @@ class Client(object):
     """https://developers.coinbase.com/api/v2#create-a-new-order-for-a-checkout"""
     response = self._post('v2', 'checkouts', checkout_id, 'orders', data=params)
     return self._make_api_object(response, Order)
+
+  def verify_callback(self, body, signature):
+    h = SHA256.new()
+    h.update(body)
+    key = Client.callback_public_key()
+    verifier = PKCS1_v1_5.new(key)
+    signature = bytes(signature, 'utf-8') if six.PY3 else bytes(signature)
+    signature_buffer = base64.b64decode(signature)
+    return verifier.verify(h, signature_buffer)
+
+  @staticmethod
+  def callback_public_key():
+    if Client.cached_callback_public_key is None:
+      f = open(COINBASE_CALLBACK_PUBLIC_KEY_PATH,'r')
+      Client.cached_callback_public_key = RSA.importKey(f.read())
+    return Client.cached_callback_public_key
 
 
 class OAuthClient(Client):
