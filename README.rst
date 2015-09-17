@@ -154,7 +154,7 @@ In a successful API response, any warnings will be present as a list on the retu
 
     accounts = client.get_accounts()
     assert (accounts.warnings is None) or isinstance(accounts.warnings, list)
-  
+
 All warning messages will also be alerted using the `Python stdlib warnings module <https://docs.python.org/2/library/warnings.html>`_.
 
 Pagination
@@ -729,6 +729,14 @@ You only need to do this if the initial withdrawal was explicitly uncommitted.
     checkout = client.get_checkout(checkout_id)
     checkout.create_order()
 
+`Merchant Callbacks <https://developers.coinbase.com/docs/merchants/callbacks>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Verify callback authenticity**
+
+.. code:: python
+
+    client.verify_callback(request.body, request.META['X-Signature']) # true/false
 
 Testing / Contributing
 ----------------------
@@ -743,7 +751,7 @@ To run the tests, clone the repository and then:
     # Install the requirements
     pip install -r requirements.txt
     pip install -r test-requirements.txt
-    
+
     # Run the tests for your current version of Python
     make tests
 
