@@ -710,6 +710,12 @@ You only need to do this if the initial withdrawal was explicitly uncommitted.
 .. code:: python
 
     client.get_checkout(checkout_id)
+    
+**Create a checkout**
+
+.. code:: python
+
+    client.create_checkout(amount='1', currency='BTC', name='Order #1234')
 
 **Get a checkout's orders**
 
