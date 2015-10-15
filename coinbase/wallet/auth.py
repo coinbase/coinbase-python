@@ -6,7 +6,9 @@ from __future__ import unicode_literals
 
 import hashlib
 import hmac
+from requests.utils import to_native_string
 import time
+
 from requests.auth import AuthBase
 
 
@@ -28,10 +30,10 @@ class HMACAuth(AuthBase):
 
     signature = hmac.new(secret, message, hashlib.sha256).hexdigest()
     request.headers.update({
-      'CB-VERSION': self.api_version,
-      'CB-ACCESS-KEY': self.api_key,
-      'CB-ACCESS-SIGN': signature,
-      'CB-ACCESS-TIMESTAMP': timestamp,
+      to_native_string('CB-VERSION'): self.api_version,
+      to_native_string('CB-ACCESS-KEY'): self.api_key,
+      to_native_string('CB-ACCESS-SIGN'): signature,
+      to_native_string('CB-ACCESS-TIMESTAMP'): timestamp,
     })
     return request
 
@@ -43,6 +45,7 @@ class OAuth2Auth(AuthBase):
   def __call__(self, request):
     access_token = self.access_token_getter()
     request.headers.update({
-        'Authorization': 'Bearer {0}'.format(access_token),
+      to_native_string('Authorization'):
+        to_native_string('Bearer {0}'.format(access_token)),
       })
     return request
