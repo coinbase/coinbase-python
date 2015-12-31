@@ -25,6 +25,7 @@ from coinbase.wallet.model import Checkout
 from coinbase.wallet.model import CurrentUser
 from coinbase.wallet.model import Deposit
 from coinbase.wallet.model import Merchant
+from coinbase.wallet.model import Notification
 from coinbase.wallet.model import PaymentMethod
 from coinbase.wallet.model import Order
 from coinbase.wallet.model import Sell
@@ -254,6 +255,18 @@ class Client(object):
     """https://developers.coinbase.com/api/v2#delete-account"""
     self._delete('v2', 'accounts', account_id, data=params)
     return None
+
+  # Notifications API
+  # -----------------------------------------------------------
+  def get_notifications(self, **params):
+    """https://developers.coinbase.com/api/v2#list-notifications"""
+    response = self._get('v2', 'notifications', data=params)
+    return self._make_api_object(response, Notification)
+
+  def get_notification(self, notification_id, **params):
+    """https://developers.coinbase.com/api/v2#show-a-notification"""
+    response = self._get('v2', 'notifications', notification_id, data=params)
+    return self._make_api_object(response, Notification)
 
   # Addresses API
   # -----------------------------------------------------------

@@ -257,6 +257,7 @@ class Account(APIObject):
     """https://developers.coinbase.com/api/v2#commit-a-withdrawal"""
     return self.api_client.commit_withdrawal(self.id, withdrawal_id, **params)
 
+class Notification(APIObject): pass
 
 class Address(APIObject): pass
 
@@ -347,6 +348,7 @@ _resource_to_model = {
     'checkout': Checkout,
     'deposit': Transfer,
     'merchant': Merchant,
+    'notification': Notification,
     'order': Order,
     'payment_method': PaymentMethod,
     'sell': Sell,
