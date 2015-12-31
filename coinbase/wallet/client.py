@@ -187,6 +187,11 @@ class Client(object):
     response = self._get('v2', 'prices', 'spot', data=params)
     return self._make_api_object(response, APIObject)
 
+  def get_historic_prices(self, **params):
+    """https://developers.coinbase.com/api/v2#get-historic-prices"""
+    response = self._get('v2', 'prices', 'historic', data=params)
+    return self._make_api_object(response, APIObject)
+
   def get_time(self, **params):
     """https://developers.coinbase.com/api/v2#time"""
     response = self._get('v2', 'time', data=params)
