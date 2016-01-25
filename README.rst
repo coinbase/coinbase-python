@@ -237,6 +237,17 @@ If this is the case, a ``TwoFactorRequiredError`` will be raised:
       # Re-try call with the `two_factor_token` parameter
       tx = account.send_money(to='test@test.com', amount='1', currency='BTC', two_factor_token="123456")
 
+`Notifications/Callbacks <https://developers.coinbase.com/docs/wallet/notifications>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Verify notification authenticity**
+
+.. code:: python
+
+    client.verify_callback(request.body, request.META['CB-SIGNATURE']) # true/false
+
+Older versions of Coinbase API callbacks use header `X-Signature` which can also be validated with this method.
+
 Usage
 -----
 This is not intended to provide complete documentation of the API.
@@ -734,15 +745,6 @@ You only need to do this if the initial withdrawal was explicitly uncommitted.
     # or
     checkout = client.get_checkout(checkout_id)
     checkout.create_order()
-
-`Merchant Callbacks <https://developers.coinbase.com/docs/merchants/callbacks>`_
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-**Verify callback authenticity**
-
-.. code:: python
-
-    client.verify_callback(request.body, request.META['X-Signature']) # true/false
 
 Testing / Contributing
 ----------------------
