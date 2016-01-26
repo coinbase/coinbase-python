@@ -246,8 +246,6 @@ If this is the case, a ``TwoFactorRequiredError`` will be raised:
 
     client.verify_callback(request.body, request.META['CB-SIGNATURE']) # true/false
 
-Older versions of Coinbase API callbacks use header `X-Signature` which can also be validated with this method.
-
 Usage
 -----
 This is not intended to provide complete documentation of the API.
@@ -721,7 +719,7 @@ You only need to do this if the initial withdrawal was explicitly uncommitted.
 .. code:: python
 
     client.get_checkout(checkout_id)
-    
+
 **Create a checkout**
 
 .. code:: python
