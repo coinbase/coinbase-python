@@ -4,4 +4,6 @@ include README.rst
 include PYPIREADME.rst
 include setup.py
 include *requirements.txt
+include coinbase/wallet/ca-coinbase.crt
+include coinbase/wallet/coinbase-callback.pub
 graft tests
