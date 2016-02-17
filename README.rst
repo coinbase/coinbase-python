@@ -240,6 +240,8 @@ If this is the case, a ``TwoFactorRequiredError`` will be raised:
 `Notifications/Callbacks <https://developers.coinbase.com/docs/wallet/notifications>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Note: Only production callbacks can be verified. Callbacks issued by the sandbox will always return false below.
+
 **Verify notification authenticity**
 
 .. code:: python
