@@ -563,7 +563,7 @@ class Client(object):
 
 
 class OAuthClient(Client):
-  def __init__(self, access_token, refresh_token, base_api_uri=None):
+  def __init__(self, access_token, refresh_token, base_api_uri=None, api_version=None):
     if not access_token:
       raise ValueError("Missing `access_token`.")
     if not refresh_token:
@@ -575,8 +575,10 @@ class OAuthClient(Client):
     # Allow passing in a different API base.
     self.BASE_API_URI = check_uri_security(base_api_uri or self.BASE_API_URI)
 
+    self.API_VERSION = api_version or str(datetime.date.today())
+
     # Set up a requests session for interacting with the API.
-    self.session = self._build_session(OAuth2Auth, lambda: self.access_token)
+    self.session = self._build_session(OAuth2Auth, lambda: self.access_token, self.API_VERSION)
 
   def revoke(self):
     """https://developers.coinbase.com/docs/wallet/coinbase-connect#revoking-an-access-token"""
