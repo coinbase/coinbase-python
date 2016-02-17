@@ -5,6 +5,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import base64
+import datetime
 import os
 import re
 import requests
@@ -64,11 +65,10 @@ class Client(object):
   VERIFY_SSL = True
 
   BASE_API_URI = 'https://api.coinbase.com/'
-  API_VERSION = '2015-06-16'
 
   cached_callback_public_key = None
 
-  def __init__(self, api_key, api_secret, base_api_uri=None):
+  def __init__(self, api_key, api_secret, base_api_uri=None, api_version=None):
     if not api_key:
       raise ValueError('Missing `api_key`.')
     if not api_secret:
@@ -76,6 +76,8 @@ class Client(object):
 
     # Allow passing in a different API base.
     self.BASE_API_URI = check_uri_security(base_api_uri or self.BASE_API_URI)
+
+    self.API_VERSION = api_version or str(datetime.date.today())
 
     # Set up a requests session for interacting with the API.
     self.session = self._build_session(HMACAuth, api_key, api_secret, self.API_VERSION)
