@@ -65,6 +65,7 @@ class Client(object):
   VERIFY_SSL = True
 
   BASE_API_URI = 'https://api.coinbase.com/'
+  API_VERSION = '2016-02-18'
 
   cached_callback_public_key = None
 
@@ -77,7 +78,7 @@ class Client(object):
     # Allow passing in a different API base.
     self.BASE_API_URI = check_uri_security(base_api_uri or self.BASE_API_URI)
 
-    self.API_VERSION = api_version or str(datetime.date.today())
+    self.API_VERSION = api_version or self.API_VERSION
 
     # Set up a requests session for interacting with the API.
     self.session = self._build_session(HMACAuth, api_key, api_secret, self.API_VERSION)
@@ -575,7 +576,7 @@ class OAuthClient(Client):
     # Allow passing in a different API base.
     self.BASE_API_URI = check_uri_security(base_api_uri or self.BASE_API_URI)
 
-    self.API_VERSION = api_version or str(datetime.date.today())
+    self.API_VERSION = api_version or self.API_VERSION
 
     # Set up a requests session for interacting with the API.
     self.session = self._build_session(OAuth2Auth, lambda: self.access_token, self.API_VERSION)

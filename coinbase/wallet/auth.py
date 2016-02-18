@@ -39,12 +39,14 @@ class HMACAuth(AuthBase):
 
 
 class OAuth2Auth(AuthBase):
-  def __init__(self, access_token_getter):
+  def __init__(self, access_token_getter, api_version):
     self.access_token_getter = access_token_getter
+    self.api_version = api_version
 
   def __call__(self, request):
     access_token = self.access_token_getter()
     request.headers.update({
+      to_native_string('CB-VERSION'): self.api_version,
       to_native_string('Authorization'):
         to_native_string('Bearer {0}'.format(access_token)),
       })
