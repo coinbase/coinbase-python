@@ -115,23 +115,6 @@ API methods that return lists of objects (for instance, ``client.get_accounts()`
 But, the ``APIObject`` is not actually a list (it's a subclass of ``dict``) so you cannot iterate through the items of ``data`` directly.
 Simple slicing and index access are provided to make common uses easier, but to access the actual list you must reference the ``data`` attribute.
 
-Sandbox support
-"""""""""""""""
-Both the ``Client`` and ``OAuthClient`` support `the Coinbase Sandbox environment <https://developers.coinbase.com/api/v2#sandbox>`_. Just initialize the client with the optional ``base_api_uri`` parameter:
-
-.. code:: python
-
-    sandbox_client = Client(
-        api_key,
-        api_secret,
-        base_api_uri='https://api.sandbox.coinbase.com')
-    sandbox_oauth_client = OAuthClient(
-        access_token,
-        refresh_token,
-        base_api_uri='https://api.sandbox.coinbase.com')
-
-Remember that both API key and OAuth2 credentials are different for Sandbox environment and you need to create them separately `from the Sandbox environment <https://sandbox.coinbase.com>`_.
-
 Refreshing
 """"""""""
 All the objects returned by API methods are subclasses of the ``APIObject`` and support being "refreshed" from the server.
@@ -239,8 +222,6 @@ If this is the case, a ``TwoFactorRequiredError`` will be raised:
 
 `Notifications/Callbacks <https://developers.coinbase.com/docs/wallet/notifications>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Note: Only production callbacks can be verified. Callbacks issued by the sandbox will always return false below.
 
 **Verify notification authenticity**
 
