@@ -208,21 +208,21 @@ class TestClient(unittest2.TestCase):
     self.assertIsInstance(exchange_rates, APIObject)
     self.assertEqual(exchange_rates.data, mock_collection)
 
-  @mock_response(hp.GET, '/v2/prices/buy', mock_item)
+  @mock_response(hp.GET, '/v2/prices/BTC-USD/buy', mock_item)
   def test_get_buy_price(self):
     client = Client(api_key, api_secret)
     buy_price = client.get_buy_price()
     self.assertIsInstance(buy_price, APIObject)
     self.assertEqual(buy_price, mock_item)
 
-  @mock_response(hp.GET, '/v2/prices/sell', mock_item)
+  @mock_response(hp.GET, '/v2/prices/BTC-USD/sell', mock_item)
   def test_get_sell_price(self):
     client = Client(api_key, api_secret)
     sell_price = client.get_sell_price()
     self.assertIsInstance(sell_price, APIObject)
     self.assertEqual(sell_price, mock_item)
 
-  @mock_response(hp.GET, '/v2/prices/spot', mock_item)
+  @mock_response(hp.GET, '/v2/prices/BTC-USD/spot', mock_item)
   def test_get_spot_price(self):
     client = Client(api_key, api_secret)
     spot_price = client.get_spot_price()

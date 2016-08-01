@@ -254,19 +254,19 @@ For more information on the included models and abstractions, please read the co
 
 .. code:: python
 
-    client.get_buy_price()
+    client.get_buy_price(currency_pair = 'BTC-USD')
 
 **Sell price**
 
 .. code:: python
 
-    client.get_sell_price()
+    client.get_sell_price(currency_pair = 'BTC-USD')
 
 **Spot price**
 
 .. code:: python
 
-    client.get_spot_price()
+    client.get_spot_price(currency_pair = 'BTC-USD')
 
 **Current server time**
 

@@ -178,17 +178,29 @@ class Client(object):
 
   def get_buy_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-buy-price"""
-    response = self._get('v2', 'prices', 'buy', data=params)
+    if 'currency_pair' in params:
+      currency_pair = params['currency_pair']
+    else:
+      currency_pair = 'BTC-USD'
+    response = self._get('v2', 'prices', currency_pair, 'buy', data=params)
     return self._make_api_object(response, APIObject)
 
   def get_sell_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-sell-price"""
-    response = self._get('v2', 'prices', 'sell', data=params)
+    if 'currency_pair' in params:
+      currency_pair = params['currency_pair']
+    else:
+      currency_pair = 'BTC-USD'
+    response = self._get('v2', 'prices', currency_pair, 'sell', data=params)
     return self._make_api_object(response, APIObject)
 
   def get_spot_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-spot-price"""
-    response = self._get('v2', 'prices', 'spot', data=params)
+    if 'currency_pair' in params:
+      currency_pair = params['currency_pair']
+    else:
+      currency_pair = 'BTC-USD'
+    response = self._get('v2', 'prices', currency_pair, 'spot', data=params)
     return self._make_api_object(response, APIObject)
 
   def get_historic_prices(self, **params):
