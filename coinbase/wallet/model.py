@@ -185,6 +185,20 @@ class Account(APIObject):
     """https://developers.coinbase.com/api/v2#request-money"""
     return self.api_client.request_money(self.id, **params)
 
+  # Reports API
+  # -----------------------------------------------------------
+  def get_reports(self, **params):
+    """https://developers.coinbase.com/api/v2#list-all-reports"""
+    return self.api_client.get_reports(**params)
+
+  def get_report(self, report_id, **params):
+    """https://developers.coinbase.com/api/v2#show-a-report"""
+    return self.api_client.get_report(report_id, **params)
+
+  def create_report(self, **params):
+    """https://developers.coinbase.com/api/v2#generate-a-new-report"""
+    return self.api_client.create_report(**params)
+
   # Buys API
   # -----------------------------------------------------------
   def get_buys(self, **params):
@@ -315,6 +329,9 @@ class Transaction(APIObject):
     return self.api_client._make_api_object(response, APIObject)
 
 
+class Report(APIObject): pass
+
+
 class Transfer(APIObject):
   def commit(self, **params):
     response = self.api_client._post(self.resource_path, 'commit')
@@ -351,6 +368,7 @@ _resource_to_model = {
     'notification': Notification,
     'order': Order,
     'payment_method': PaymentMethod,
+    'report': Report,
     'sell': Sell,
     'transaction': Transaction,
     'transfer': Transfer,

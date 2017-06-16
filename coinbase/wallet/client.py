@@ -29,6 +29,7 @@ from coinbase.wallet.model import PaymentMethod
 from coinbase.wallet.model import Order
 from coinbase.wallet.model import Sell
 from coinbase.wallet.model import Transaction
+from coinbase.wallet.model import Report
 from coinbase.wallet.model import User
 from coinbase.wallet.model import Withdrawal
 from coinbase.wallet.model import new_api_object
@@ -363,6 +364,25 @@ class Client(object):
         'v2', 'accounts', account_id, 'transactions', request_id, 'cancel',
         data=params)
     return self._make_api_object(response, APIObject)
+
+  # Reports API
+  # -----------------------------------------------------------
+  def get_reports(self, **params):
+    """https://developers.coinbase.com/api/v2#list-all-reports"""
+    response = self._get('v2', 'reports', data=params)
+    return self._make_api_object(response, Report)
+
+  def get_report(self, report_id, **params):
+    """https://developers.coinbase.com/api/v2#show-a-report"""
+    response = self._get('v2', 'reports', report_id, data=params)
+    return self._make_api_object(response, Report)
+
+  def create_report(self, **params):
+    """https://developers.coinbase.com/api/v2#generate-a-new-report"""
+    if 'type' not in params and 'email' not in params:
+      raise ValueError("Missing required parameter: 'type' or 'email'")
+    response = self._post('v2', 'reports', data=params)
+    return self._make_api_object(response, Report)
 
   # Buys API
   # -----------------------------------------------------------

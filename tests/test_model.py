@@ -23,6 +23,7 @@ from coinbase.wallet.model import Withdrawal
 from coinbase.wallet.model import Buy
 from coinbase.wallet.model import Address
 from coinbase.wallet.model import Transaction
+from coinbase.wallet.model import Report
 from tests.helpers import mock_response
 
 
@@ -217,6 +218,35 @@ class TestAccount(unittest2.TestCase):
     transaction = account.request_money(**send_kwargs)
     self.assertIsInstance(transaction, Transaction)
     self.assertEqual(transaction, mock_item)
+
+  @mock_response(hp.GET, '/v2/reports', mock_collection)
+  def test_get_reports(self):
+    client = Client(api_key, api_secret)
+    account = new_api_object(client, mock_account, Account)
+    reports = account.get_reports()
+    self.assertIsInstance(reports, APIObject)
+    self.assertEqual(reports.data, mock_collection)
+    for report in reports.data:
+      self.assertIsInstance(report, Report)
+
+  @mock_response(hp.GET, '/v2/reports/testreportid', mock_item)
+  def test_get_report(self):
+    client = Client(api_key, api_secret)
+    account = new_api_object(client, mock_account, Account)
+    report = account.get_report('testreportid')
+    self.assertIsInstance(report, Report)
+    self.assertEqual(report, mock_item)
+
+  @mock_response(hp.POST, '/v2/reports', mock_item)
+  def test_create_report(self):
+    client = Client(api_key, api_secret)
+    account = new_api_object(client, mock_account, Account)
+    report = account.create_report(
+      type='transactions', email='example@coinbase.com'
+    )
+    self.assertIsInstance(report, APIObject)
+    self.assertIsInstance(report, Report)
+    self.assertEqual(report, mock_item)
 
   @mock_response(hp.GET, '/v2/accounts/foo/buys', mock_collection)
   def test_get_buys(self):

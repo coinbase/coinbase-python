@@ -465,6 +465,27 @@ For more information on the included models and abstractions, please read the co
 
     client.cancel_request(account_id, request_id)
 
+`Reports <https://developers.coinbase.com/api/v2#reports>`_
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**Get all reports**
+
+.. code:: python
+
+    client.get_reports()
+
+**Get report**
+
+.. code:: python
+
+    client.get_report(report_id)
+
+**Create report**
+
+.. code:: python
+
+    client.create_report(type='transactions', email='sample@example.com')  # types can also be 'orders' or 'transfers'
+
 `Buys <https://developers.coinbase.com/api/v2#buys>`_
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
