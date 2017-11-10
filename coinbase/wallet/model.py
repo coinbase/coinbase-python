@@ -80,7 +80,7 @@ class APIObject(dict):
       return dict.__getitem__(self, *args, **kwargs)
     except KeyError as key_error:
       attribute_error = AttributeError(*key_error.args)
-      attribute_error.message = key_error.message
+      attribute_error.message = getattr(key_error, 'message', '')
       raise attribute_error
 
   def __delattr__(self, *args, **kwargs):
@@ -88,7 +88,7 @@ class APIObject(dict):
       return dict.__delitem__(self, *args, **kwargs)
     except KeyError as key_error:
       attribute_error = AttributeError(*key_error.args)
-      attribute_error.message = key_error.message
+      attribute_error.message = getattr(key_error, 'message', '')
       raise attribute_error
 
   def __setattr__(self, key, value):

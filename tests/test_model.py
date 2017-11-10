@@ -65,6 +65,11 @@ class TestAPIObject(unittest2.TestCase):
     # Keys not present originally will not be removed
     self.assertEqual(obj.resource_path, '/resource/foo')
 
+  def test_dot_notation(self):
+    client = Client(api_key, api_secret)
+    obj = new_api_object(client, mock_item, APIObject)
+    with self.assertRaises(AttributeError):
+        obj.foo
 
 mock_account = {
     'id': 'foo',
