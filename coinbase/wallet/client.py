@@ -88,7 +88,8 @@ class Client(object):
     authentication handling."""
     session = requests.session()
     session.auth = auth_class(*args, **kwargs)
-    session.headers.update({'Accept': 'application/json',
+    session.headers.update({'CB-VERSION': self.API_VERSION,
+                            'Accept': 'application/json',
                             'Content-Type': 'application/json',
                             'User-Agent': 'coinbase/python/2.0'})
     return session
