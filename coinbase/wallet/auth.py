@@ -48,6 +48,6 @@ class OAuth2Auth(AuthBase):
     request.headers.update({
       to_native_string('CB-VERSION'): self.api_version,
       to_native_string('Authorization'):
-        to_native_string('Bearer {0}'.format(access_token)),
+        to_native_string('Bearer {}'.format(access_token)),
       })
     return request
