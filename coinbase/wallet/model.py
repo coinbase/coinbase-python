@@ -122,10 +122,10 @@ class APIObject(dict):
       return '(invalid JSON)'
 
   def __name__(self):
-    return '<{0} @ {1}>'.format(type(self).__name__, hex(id(self))) # pragma: no cover
+    return '<{} @ {}>'.format(type(self).__name__, hex(id(self))) # pragma: no cover
 
   def __repr__(self):
-    return '{0} {1}'.format(self.__name__(), str(self)) # pragma: no cover
+    return '{} {}'.format(self.__name__(), str(self)) # pragma: no cover
 
 
 class Account(APIObject):
@@ -283,7 +283,7 @@ class Money(APIObject):
     # cases, the string representation also includes a full dump of the keys of
     # the object.
     if set(dir(self)) > set(('amount', 'currency')):
-      return '{0} {1}'.format(
+      return '{} {}'.format(
           currency_str, json.dumps(self, sort_keys=True, indent=2))
     return currency_str
 

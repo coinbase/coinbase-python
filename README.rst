@@ -50,7 +50,7 @@ or with ``easy_install``:
 
     easy_install coinbase
 
-The library is currently tested against Python versions 2.6.9, 2.7.10, 3.2, 3.3.6, and 3.4.3.
+The library is currently tested against Python versions 2.7 and 3.4+.
 
 Documentation
 -------------
