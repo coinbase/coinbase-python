@@ -168,66 +168,57 @@ class Client(object):
   # -----------------------------------------------------------
   def get_currencies(self, **params):
     """https://developers.coinbase.com/api/v2#currencies"""
-    response = self._get('v2', 'currencies', data=params)
+    response = self._get('v2', 'currencies', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_exchange_rates(self, **params):
     """https://developers.coinbase.com/api/v2#exchange-rates"""
-    response = self._get('v2', 'exchange-rates', data=params)
+    response = self._get('v2', 'exchange-rates', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_buy_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-buy-price"""
-    if 'currency_pair' in params:
-      currency_pair = params['currency_pair']
-    else:
-      currency_pair = 'BTC-USD'
-    response = self._get('v2', 'prices', currency_pair, 'buy', data=params)
+    currency_pair = params.get('currency_pair', 'BTC-USD')
+    response = self._get('v2', 'prices', currency_pair, 'buy', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_sell_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-sell-price"""
-    if 'currency_pair' in params:
-      currency_pair = params['currency_pair']
-    else:
-      currency_pair = 'BTC-USD'
-    response = self._get('v2', 'prices', currency_pair, 'sell', data=params)
+    currency_pair = params.get('currency_pair', 'BTC-USD')
+    response = self._get('v2', 'prices', currency_pair, 'sell', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_spot_price(self, **params):
     """https://developers.coinbase.com/api/v2#get-spot-price"""
-    if 'currency_pair' in params:
-      currency_pair = params['currency_pair']
-    else:
-      currency_pair = 'BTC-USD'
-    response = self._get('v2', 'prices', currency_pair, 'spot', data=params)
+    currency_pair = params.get('currency_pair', 'BTC-USD')
+    response = self._get('v2', 'prices', currency_pair, 'spot', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_historic_prices(self, **params):
     """https://developers.coinbase.com/api/v2#get-historic-prices"""
-    response = self._get('v2', 'prices', 'historic', data=params)
+    response = self._get('v2', 'prices', 'historic', params=params)
     return self._make_api_object(response, APIObject)
 
   def get_time(self, **params):
     """https://developers.coinbase.com/api/v2#time"""
-    response = self._get('v2', 'time', data=params)
+    response = self._get('v2', 'time', params=params)
     return self._make_api_object(response, APIObject)
 
   # User API
   # -----------------------------------------------------------
   def get_user(self, user_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-user"""
-    response = self._get('v2', 'users', user_id, data=params)
+    response = self._get('v2', 'users', user_id, params=params)
     return self._make_api_object(response, User)
 
   def get_current_user(self, **params):
     """https://developers.coinbase.com/api/v2#show-current-user"""
-    response = self._get('v2', 'user', data=params)
+    response = self._get('v2', 'user', params=params)
     return self._make_api_object(response, CurrentUser)
 
   def get_auth_info(self, **params):
     """https://developers.coinbase.com/api/v2#show-authorization-information"""
-    response = self._get('v2', 'user', 'auth', data=params)
+    response = self._get('v2', 'user', 'auth', params=params)
     return self._make_api_object(response, APIObject)
 
   def update_current_user(self, **params):
@@ -239,12 +230,12 @@ class Client(object):
   # -----------------------------------------------------------
   def get_accounts(self, **params):
     """https://developers.coinbase.com/api/v2#list-accounts"""
-    response = self._get('v2', 'accounts', data=params)
+    response = self._get('v2', 'accounts', params=params)
     return self._make_api_object(response, Account)
 
   def get_account(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#show-an-account"""
-    response = self._get('v2', 'accounts', account_id, data=params)
+    response = self._get('v2', 'accounts', account_id, params=params)
     return self._make_api_object(response, Account)
 
   def get_primary_account(self, **params):
@@ -275,25 +266,25 @@ class Client(object):
   # -----------------------------------------------------------
   def get_notifications(self, **params):
     """https://developers.coinbase.com/api/v2#list-notifications"""
-    response = self._get('v2', 'notifications', data=params)
+    response = self._get('v2', 'notifications', params=params)
     return self._make_api_object(response, Notification)
 
   def get_notification(self, notification_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-notification"""
-    response = self._get('v2', 'notifications', notification_id, data=params)
+    response = self._get('v2', 'notifications', notification_id, params=params)
     return self._make_api_object(response, Notification)
 
   # Addresses API
   # -----------------------------------------------------------
   def get_addresses(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-addresses"""
-    response = self._get('v2', 'accounts', account_id, 'addresses', data=params)
+    response = self._get('v2', 'accounts', account_id, 'addresses', params=params)
     return self._make_api_object(response, Address)
 
   def get_address(self, account_id, address_id, **params):
     """https://developers.coinbase.com/api/v2#show-addresss"""
     response = self._get(
-        'v2', 'accounts', account_id, 'addresses', address_id, data=params)
+        'v2', 'accounts', account_id, 'addresses', address_id, params=params)
     return self._make_api_object(response, Address)
 
   def get_address_transactions(self, account_id, address_id, **params):
@@ -305,7 +296,7 @@ class Client(object):
         'addresses',
         address_id,
         'transactions',
-        data=params)
+        params=params)
     return self._make_api_object(response, Transaction)
 
   def create_address(self, account_id, **params):
@@ -317,13 +308,13 @@ class Client(object):
   # -----------------------------------------------------------
   def get_transactions(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-transactions"""
-    response = self._get('v2', 'accounts', account_id, 'transactions', data=params)
+    response = self._get('v2', 'accounts', account_id, 'transactions', params=params)
     return self._make_api_object(response, Transaction)
 
   def get_transaction(self, account_id, transaction_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-transaction"""
     response = self._get(
-        'v2', 'accounts', account_id, 'transactions', transaction_id, data=params)
+        'v2', 'accounts', account_id, 'transactions', transaction_id, params=params)
     return self._make_api_object(response, Transaction)
 
   def send_money(self, account_id, **params):
@@ -378,12 +369,12 @@ class Client(object):
   # -----------------------------------------------------------
   def get_buys(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-buys"""
-    response = self._get('v2', 'accounts', account_id, 'buys', data=params)
+    response = self._get('v2', 'accounts', account_id, 'buys', params=params)
     return self._make_api_object(response, Buy)
 
   def get_buy(self, account_id, buy_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-buy"""
-    response = self._get('v2', 'accounts', account_id, 'buys', buy_id, data=params)
+    response = self._get('v2', 'accounts', account_id, 'buys', buy_id, params=params)
     return self._make_api_object(response, Buy)
 
   def buy(self, account_id, **params):
@@ -403,13 +394,13 @@ class Client(object):
   # -----------------------------------------------------------
   def get_sells(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-sells"""
-    response = self._get('v2', 'accounts', account_id, 'sells', data=params)
+    response = self._get('v2', 'accounts', account_id, 'sells', params=params)
     return self._make_api_object(response, Sell)
 
   def get_sell(self, account_id, sell_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-sell"""
     response = self._get(
-        'v2', 'accounts', account_id, 'sells', sell_id, data=params)
+        'v2', 'accounts', account_id, 'sells', sell_id, params=params)
     return self._make_api_object(response, Sell)
 
   def sell(self, account_id, **params):
@@ -429,13 +420,13 @@ class Client(object):
   # -----------------------------------------------------------
   def get_deposits(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-deposits"""
-    response = self._get('v2', 'accounts', account_id, 'deposits', data=params)
+    response = self._get('v2', 'accounts', account_id, 'deposits', params=params)
     return self._make_api_object(response, Deposit)
 
   def get_deposit(self, account_id, deposit_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-deposit"""
     response = self._get(
-        'v2', 'accounts', account_id, 'deposits', deposit_id, data=params)
+        'v2', 'accounts', account_id, 'deposits', deposit_id, params=params)
     return self._make_api_object(response, Deposit)
 
   def deposit(self, account_id, **params):
@@ -457,13 +448,13 @@ class Client(object):
   # -----------------------------------------------------------
   def get_withdrawals(self, account_id, **params):
     """https://developers.coinbase.com/api/v2#list-withdrawals"""
-    response = self._get('v2', 'accounts', account_id, 'withdrawals', data=params)
+    response = self._get('v2', 'accounts', account_id, 'withdrawals', params=params)
     return self._make_api_object(response, Withdrawal)
 
   def get_withdrawal(self, account_id, withdrawal_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-withdrawal"""
     response = self._get(
-        'v2', 'accounts', account_id, 'withdrawals', withdrawal_id, data=params)
+        'v2', 'accounts', account_id, 'withdrawals', withdrawal_id, params=params)
     return self._make_api_object(response, Withdrawal)
 
   def withdraw(self, account_id, **params):
@@ -485,31 +476,31 @@ class Client(object):
   # -----------------------------------------------------------
   def get_payment_methods(self, **params):
     """https://developers.coinbase.com/api/v2#list-payment-methods"""
-    response = self._get('v2', 'payment-methods', data=params)
+    response = self._get('v2', 'payment-methods', params=params)
     return self._make_api_object(response, PaymentMethod)
 
   def get_payment_method(self, payment_method_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-payment-method"""
-    response = self._get('v2', 'payment-methods', payment_method_id, data=params)
+    response = self._get('v2', 'payment-methods', payment_method_id, params=params)
     return self._make_api_object(response, PaymentMethod)
 
   # Merchants API
   # -----------------------------------------------------------
   def get_merchant(self, merchant_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-merchant"""
-    response = self._get('v2', 'merchants', merchant_id, data=params)
+    response = self._get('v2', 'merchants', merchant_id, params=params)
     return self._make_api_object(response, Merchant)
 
   # Orders API
   # -----------------------------------------------------------
   def get_orders(self, **params):
     """https://developers.coinbase.com/api/v2#list-orders"""
-    response = self._get('v2', 'orders', data=params)
+    response = self._get('v2', 'orders', params=params)
     return self._make_api_object(response, Order)
 
   def get_order(self, order_id, **params):
     """https://developers.coinbase.com/api/v2#show-an-order"""
-    response = self._get('v2', 'orders', order_id, data=params)
+    response = self._get('v2', 'orders', order_id, params=params)
     return self._make_api_object(response, Order)
 
   def create_order(self, **params):
@@ -532,12 +523,12 @@ class Client(object):
   # -----------------------------------------------------------
   def get_checkouts(self, **params):
     """https://developers.coinbase.com/api/v2#list-checkouts"""
-    response = self._get('v2', 'checkouts', data=params)
+    response = self._get('v2', 'checkouts', params=params)
     return self._make_api_object(response, Checkout)
 
   def get_checkout(self, checkout_id, **params):
     """https://developers.coinbase.com/api/v2#show-a-checkout"""
-    response = self._get('v2', 'checkouts', checkout_id, data=params)
+    response = self._get('v2', 'checkouts', checkout_id, params=params)
     return self._make_api_object(response, Checkout)
 
   def create_checkout(self, **params):
@@ -550,7 +541,7 @@ class Client(object):
 
   def get_checkout_orders(self, checkout_id, **params):
     """https://developers.coinbase.com/api/v2#list-checkout39s-orders"""
-    response = self._get('v2', 'checkouts', checkout_id, 'orders', data=params)
+    response = self._get('v2', 'checkouts', checkout_id, 'orders', params=params)
     return self._make_api_object(response, Order)
 
   def create_checkout_order(self, checkout_id, **params):
