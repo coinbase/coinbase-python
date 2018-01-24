@@ -7,9 +7,6 @@ Coinbase
 .. image:: https://img.shields.io/travis/coinbase/coinbase-python/master.svg
     :target: https://travis-ci.org/coinbase/coinbase-python
 
-.. image:: https://img.shields.io/pypi/dm/coinbase.svg
-    :target: https://pypi.python.org/pypi/coinbase/
-
 .. image:: https://img.shields.io/pypi/wheel/coinbase.svg
     :target: https://pypi.python.org/pypi/coinbase/
 
