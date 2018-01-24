@@ -5,9 +5,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import base64
-import datetime
 import os
-import re
 import requests
 import six
 import warnings
