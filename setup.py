@@ -13,7 +13,7 @@ setup(
     version=coinbase.wallet.__version__,
     packages=['coinbase', 'coinbase.wallet'],
     include_package_data=True,
-    license='MIT License',
+    license='Apache 2.0',
     description='Coinbase API client library',
     long_description=README,
     url='https://github.com/coinbase/coinbase-python/',
