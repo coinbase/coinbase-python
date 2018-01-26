@@ -230,6 +230,13 @@ class TestClient(unittest2.TestCase):
     self.assertIsInstance(spot_price, APIObject)
     self.assertEqual(spot_price, mock_item)
 
+  @mock_response(hp.GET, '/v2/prices/BTC-USD/historic', mock_item)
+  def test_get_historic_prices(self):
+    client = Client(api_key, api_secret)
+    historic_prices = client.get_historic_prices(currency_pair='BTC-USD')
+    self.assertIsInstance(historic_prices, APIObject)
+    self.assertEqual(historic_prices, mock_item)
+
   @mock_response(hp.GET, '/v2/time', mock_item)
   def test_get_time(self):
     client = Client(api_key, api_secret)
