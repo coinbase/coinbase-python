@@ -49,6 +49,12 @@ or with ``easy_install``:
 
 The library is currently tested against Python versions 2.7 and 3.4+.
 
+*Note*: this package name used to refer to the unofficial `coinbase_python`
+library maintained by [George Sibble](http://onepercentbreadsticks.com/).
+George graciously allowed us to use the name for this package instead. You can
+still find that package [on Github](https://github.com/sibblegp/coinbase_python).
+Thanks, George.
+
 Documentation
 -------------
 
