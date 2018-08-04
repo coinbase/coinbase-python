@@ -147,9 +147,7 @@ class Client(object):
     kwargs.update({'prev_data':prev_data})
     next_page_id = page_info['next_uri'].split('=')[-1]
     kwargs.update({'params':{'starting_after':next_page_id}})
-    resp = self._get(*args, **kwargs)
-
-    return resp
+    return self._get(*args, **kwargs)
 
   def _post(self, *args, **kwargs):
     return self._request('post', *args, **kwargs)
