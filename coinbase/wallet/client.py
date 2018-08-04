@@ -5,6 +5,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import base64
+import json
 import os
 import requests
 import six
@@ -126,7 +127,29 @@ class Client(object):
     return response
 
   def _get(self, *args, **kwargs):
-    return self._request('get', *args, **kwargs)
+    """ Get requests can be paginated, ensure we iterate through all the pages """
+    prev_data = kwargs.pop('prev_data', [])
+    resp = self._request('get', *args, **kwargs)
+    # Load the json so we can the data as python methods
+    content = json.loads(resp._content)
+    if 'pagination' not in content:
+        # Result is not paginated
+        return resp
+
+    page_info = content['pagination']
+    if not page_info['next_uri']:
+        # next_uri is None when the cursor has been iterated to the last element
+        content['data'].extend(prev_data)
+        resp._content = json.dumps(content)
+        return resp
+
+    prev_data.extend(content['data'])
+    kwargs.update({'prev_data':prev_data})
+    next_page_id = page_info['next_uri'].split('=')[-1]
+    kwargs.update({'params':{'starting_after':next_page_id}})
+    resp = self._get(*args, **kwargs)
+
+    return resp
 
   def _post(self, *args, **kwargs):
     return self._request('post', *args, **kwargs)
