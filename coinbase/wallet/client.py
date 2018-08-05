@@ -130,8 +130,17 @@ class Client(object):
     """ Get requests can be paginated, ensure we iterate through all the pages """
     prev_data = kwargs.pop('prev_data', [])
     resp = self._request('get', *args, **kwargs)
-    # Load the json so we can the data as python methods
-    content = json.loads(resp._content)
+    resp_content = resp._content
+    if not resp_content:
+        # No content so its obviously not paginated
+        return resp
+
+    # if resp._content is a bytes object, decode it so we can loads it as json
+    if isinstance(resp_content, bytes):
+        resp_content = resp_content.decode('utf-8')
+
+    # Load the json so we can use the data as python objects
+    content = json.loads(resp_content)
     if 'pagination' not in content:
         # Result is not paginated
         return resp
@@ -140,7 +149,11 @@ class Client(object):
     if not page_info['next_uri']:
         # next_uri is None when the cursor has been iterated to the last element
         content['data'].extend(prev_data)
-        resp._content = json.dumps(content)
+        # If resp._content was is a bytes object, only set it as a bytes object
+        if isinstance(resp_content, bytes):
+            resp._content = json.dumps(content).decode('utf-8')
+        else:
+            resp._content = json.dumps(content)
         return resp
 
     prev_data.extend(content['data'])
