@@ -272,7 +272,7 @@ class TestAccount(unittest2.TestCase):
     account = new_api_object(client, mock_account, Account)
     with self.assertRaises(ValueError):
       account.buy()
-    for valid_kwargs in [{'amount': '1.0'}, {'total': '1.0'}]:
+    for valid_kwargs in [{'amount': '1.0', 'payment_method': 'bar', 'currency': 'USD'}, {'total': '1.0', 'payment_method': 'bar', 'currency': 'USD'}]:
       buy = account.buy(**valid_kwargs)
       self.assertIsInstance(buy, Buy)
       self.assertEqual(buy, mock_item)
