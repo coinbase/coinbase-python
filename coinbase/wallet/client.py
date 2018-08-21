@@ -433,6 +433,9 @@ class Client(object):
     """https://developers.coinbase.com/api/v2#sell-bitcoin"""
     if 'amount' not in params and 'total' not in params:
       raise ValueError("Missing required parameter: 'amount' or 'total'")
+    for required in ['currency']:
+      if required not in params:
+        raise ValueError("Missing required parameter: %s" % required)
     response = self._post('v2', 'accounts', account_id, 'sells', data=params)
     return self._make_api_object(response, Sell)
 
