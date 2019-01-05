@@ -49,7 +49,7 @@ COINBASE_CALLBACK_PUBLIC_KEY_PATH = os.path.join(
 
 
 class Client(object):
-    """ API Client for the Coinbase API.
+    """API Client for the Coinbase API.
 
     Entry point for making requests to the Coinbase API. Provides helper methods
     for common API endpoints, as well as niceties around response verification
@@ -62,6 +62,7 @@ class Client(object):
     Full API docs, including descriptions of each API and its paramters, are
     available here: https://developers.coinbase.com/api
     """
+
     VERIFY_SSL = True
 
     BASE_API_URI = 'https://api.coinbase.com/'
@@ -85,7 +86,8 @@ class Client(object):
 
     def _build_session(self, auth_class, *args, **kwargs):
         """Internal helper for creating a requests `session` with the correct
-        authentication handling."""
+        authentication handling.
+        """
         session = requests.session()
         session.auth = auth_class(*args, **kwargs)
         session.headers.update({'CB-VERSION': self.API_VERSION,
@@ -127,7 +129,7 @@ class Client(object):
         return response
 
     def _get(self, *args, **kwargs):
-        """ Get requests can be paginated, ensure we iterate through all the pages """
+        """Get requests can be paginated, ensure we iterate through all the pages."""
         prev_data = kwargs.pop('prev_data', [])
         resp = self._request('get', *args, **kwargs)
         resp_content = resp._content
@@ -157,9 +159,11 @@ class Client(object):
             return resp
 
         prev_data.extend(content['data'])
-        kwargs.update({'prev_data':prev_data})
         next_page_id = page_info['next_uri'].split('=')[-1]
-        kwargs.update({'params':{'starting_after':next_page_id}})
+        kwargs.update({
+            'prev_data': prev_data,
+            'params': {'starting_after': next_page_id}
+        })
         return self._get(*args, **kwargs)
 
     def _post(self, *args, **kwargs):
@@ -187,9 +191,9 @@ class Client(object):
 
         pagination = blob.get('pagination', None)
         kwargs = {
-          'response': response,
-          'pagination': pagination and new_api_object(None, pagination, APIObject),
-          'warnings': warnings_data and new_api_object(None, warnings_data, APIObject),
+            'response': response,
+            'pagination': pagination and new_api_object(None, pagination, APIObject),
+            'warnings': warnings_data and new_api_object(None, warnings_data, APIObject)
         }
         if isinstance(data, dict):
             obj = new_api_object(self, data, model_type, **kwargs)
@@ -321,8 +325,7 @@ class Client(object):
 
     def get_address(self, account_id, address_id, **params):
         """https://developers.coinbase.com/api/v2#show-addresss"""
-        response = self._get(
-            'v2', 'accounts', account_id, 'addresses', address_id, params=params)
+        response = self._get('v2', 'accounts', account_id, 'addresses', address_id, params=params)
         return self._make_api_object(response, Address)
 
     def get_address_transactions(self, account_id, address_id, **params):
@@ -624,7 +627,7 @@ class Client(object):
     @staticmethod
     def callback_public_key():
         if Client.cached_callback_public_key is None:
-            f = open(COINBASE_CALLBACK_PUBLIC_KEY_PATH,'r')
+            f = open(COINBASE_CALLBACK_PUBLIC_KEY_PATH, 'r')
             Client.cached_callback_public_key = RSA.importKey(f.read())
         return Client.cached_callback_public_key
 
@@ -660,8 +663,8 @@ class OAuthClient(Client):
         Coinbase OAuth server will be returned to the caller.
         """
         params = {
-          'grant_type': 'refresh_token',
-          'refresh_token': self.refresh_token
+            'grant_type': 'refresh_token',
+            'refresh_token': self.refresh_token
         }
         response = self._post('oauth', 'token', params=params)
         response = self._handle_response(response)

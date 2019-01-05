@@ -43,7 +43,7 @@ mock_item_updated = {
     'key1': 'val1-modified',
     'key2': 'val2-modified',
     'key3': 'newkey',
-  }
+}
 mock_collection = [mock_item, mock_item]
 
 
@@ -72,15 +72,18 @@ class TestAPIObject(unittest2.TestCase):
         with self.assertRaises(AttributeError):
             obj.foo
 
+
 mock_account = {
     'id': 'foo',
     'resource_path': '/v2/accounts/foo',
-  }
+}
 mock_account_updated = {
     'id': 'foo',
     'resource_path': '/v2/accounts/foo',
     'newkey': 'present',
-  }
+}
+
+
 class TestAccount(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/primary', mock_account_updated)
     def test_set_primary(self):
@@ -241,9 +244,7 @@ class TestAccount(unittest2.TestCase):
     def test_create_report(self):
         client = Client(api_key, api_secret)
         account = new_api_object(client, mock_account, Account)
-        report = account.create_report(
-          type='transactions', email='example@coinbase.com'
-        )
+        report = account.create_report(type='transactions', email='example@coinbase.com')
         self.assertIsInstance(report, APIObject)
         self.assertIsInstance(report, Report)
         self.assertEqual(report, mock_item)
@@ -272,7 +273,11 @@ class TestAccount(unittest2.TestCase):
         account = new_api_object(client, mock_account, Account)
         with self.assertRaises(ValueError):
             account.buy()
-        for valid_kwargs in [{'amount': '1.0', 'payment_method': 'bar', 'currency': 'USD'}, {'total': '1.0', 'payment_method': 'bar', 'currency': 'USD'}]:
+        kwargs_list = [
+            {'amount': '1.0', 'payment_method': 'bar', 'currency': 'USD'},
+            {'total': '1.0', 'payment_method': 'bar', 'currency': 'USD'}
+        ]
+        for valid_kwargs in kwargs_list:
             buy = account.buy(**valid_kwargs)
             self.assertIsInstance(buy, Buy)
             self.assertEqual(buy, mock_item)
@@ -309,7 +314,11 @@ class TestAccount(unittest2.TestCase):
         account = new_api_object(client, mock_account, Account)
         with self.assertRaises(ValueError):
             account.sell()
-        for valid_kwargs in [{'amount': '1.0', 'currency': 'USD'}, {'total': '1.0', 'currency': 'USD'}]:
+        kwargs_list = [
+            {'amount': '1.0', 'currency': 'USD'},
+            {'total': '1.0', 'currency': 'USD'}
+        ]
+        for valid_kwargs in kwargs_list:
             sell = account.sell(**valid_kwargs)
             self.assertIsInstance(sell, Sell)
             self.assertEqual(sell, mock_item)
@@ -413,11 +422,12 @@ class TestAccount(unittest2.TestCase):
         self.assertEqual(withdrawal, mock_item)
 
 
-
 mock_checkout = {
     'id': 'foo',
     'resource_path': '/v2/checkouts/foo',
-  }
+}
+
+
 class TestCheckout(unittest2.TestCase):
     @mock_response(hp.GET, '/v2/checkouts/foo/orders', mock_collection)
     def test_get_orders(self):
@@ -441,7 +451,9 @@ class TestCheckout(unittest2.TestCase):
 mock_order = {
     'id': 'foo',
     'resource_path': '/v2/orders/foo',
-  }
+}
+
+
 class TestOrder(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/orders/foo/refund', mock_item)
     def test_refund(self):
@@ -466,7 +478,9 @@ class TestOrder(unittest2.TestCase):
 mock_transaction = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/transactions/bar',
-  }
+}
+
+
 class TestTransaction(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/transactions/bar/complete', mock_item)
     def test_complete(self):
@@ -496,12 +510,14 @@ class TestTransaction(unittest2.TestCase):
 mock_buy = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/buys/bar',
-  }
+}
 mock_buy_updated = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/buys/bar',
     'updated': True,
-  }
+}
+
+
 class TestBuy(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/buys/bar/commit', mock_buy_updated)
     def test_commit(self):
@@ -517,12 +533,13 @@ class TestBuy(unittest2.TestCase):
 mock_sell = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/sells/bar',
-  }
+}
 mock_sell_updated = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/sells/bar',
     'updated': True,
-  }
+}
+
 
 class TestSell(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/sells/bar/commit', mock_sell_updated)
@@ -539,12 +556,14 @@ class TestSell(unittest2.TestCase):
 mock_deposit = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/deposits/bar',
-  }
+}
 mock_deposit_updated = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/deposits/bar',
     'updated': True,
-  }
+}
+
+
 class TestDeposit(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/deposits/bar/commit', mock_deposit_updated)
     def test_commit(self):
@@ -560,12 +579,14 @@ class TestDeposit(unittest2.TestCase):
 mock_withdrawal = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/withdrawals/bar',
-  }
+}
 mock_withdrawal_updated = {
     'id': 'bar',
     'resource_path': '/v2/accounts/foo/withdrawals/bar',
     'updated': True,
-  }
+}
+
+
 class TestWithdrawal(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/accounts/foo/withdrawals/bar/commit', mock_withdrawal_updated)
     def test_commit(self):

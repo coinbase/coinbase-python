@@ -68,16 +68,16 @@ class TestClient(unittest2.TestCase):
     def test_auth_succeeds_with_bytes_and_unicode(self):
         api_key = 'key'
         api_secret = 'secret'
-        self.assertIsInstance(api_key, six.text_type) # Unicode
-        self.assertIsInstance(api_secret, six.text_type) # Unicode
+        self.assertIsInstance(api_key, six.text_type)  # Unicode
+        self.assertIsInstance(api_secret, six.text_type)  # Unicode
 
         client = Client(api_key, api_secret)
         self.assertEqual(client._get('test').status_code, 200)
 
         api_key = api_key.encode('utf-8')
         api_secret = api_secret.encode('utf-8')
-        self.assertIsInstance(api_key, six.binary_type) # Bytes
-        self.assertIsInstance(api_secret, six.binary_type) # Bytes
+        self.assertIsInstance(api_key, six.binary_type)  # Bytes
+        self.assertIsInstance(api_secret, six.binary_type)  # Bytes
 
         client = Client(api_key, api_secret)
         self.assertEqual(client._get('test').status_code, 200)
@@ -85,6 +85,7 @@ class TestClient(unittest2.TestCase):
     @hp.activate
     def test_request_includes_auth_headers(self):
         client = Client(api_key, api_secret)
+
         def server_response(request, uri, response_headers):
             keys = [
                 'CB-VERSION', 'CB-ACCESS-KEY', 'CB-ACCESS-SIGN',
@@ -102,11 +103,11 @@ class TestClient(unittest2.TestCase):
         # Check that 2XX responses always return the response
         error_response = {
             'errors': [{
-              'id': 'fakeid',
-              'message': 'some error message',
+                'id': 'fakeid',
+                'message': 'some error message',
             }],
             'data': mock_item,
-          }
+        }
         error_str = json.dumps(error_response)
         for code in [200, 201, 204]:
             hp.register_uri(
@@ -118,14 +119,13 @@ class TestClient(unittest2.TestCase):
 
         # Check that when the error data is in the response, that's what is used.
         import coinbase.wallet.error
-        for eid, eclass in six.iteritems(
-            coinbase.wallet.error._error_id_to_class):
+        for eid, eclass in six.iteritems(coinbase.wallet.error._error_id_to_class):
             error_response = {
-              'errors': [{
-                'id': eid,
-                'message': 'some message',
-              }],
-              'data': mock_item,
+                'errors': [{
+                    'id': eid,
+                    'message': 'some message',
+                }],
+                'data': mock_item,
             }
             error_str = json.dumps(error_response)
             hp.reset()
@@ -139,8 +139,7 @@ class TestClient(unittest2.TestCase):
         # Check that when the error data is missing, the status code is used
         # instead.
         error_response = {'data': mock_item}
-        for code, eclass in six.iteritems(
-            coinbase.wallet.error._status_code_to_class):
+        for code, eclass in six.iteritems(coinbase.wallet.error._status_code_to_class):
             hp.reset()
             hp.register_uri(
                 hp.GET,
@@ -159,6 +158,7 @@ class TestClient(unittest2.TestCase):
     @hp.activate
     def test_request_helper_automatically_encodes_data(self):
         client = Client(api_key, api_secret)
+
         def server_response(request, uri, headers):
             self.assertIsInstance(request.body, six.binary_type)
             return 200, headers, '{}'
@@ -192,10 +192,11 @@ class TestClient(unittest2.TestCase):
         client = Client(api_key, api_secret)
         with self.assertRaises(AssertionError):
             client._get()
-            if errors_in_server: raise errors_in_server.pop()
+            if errors_in_server:
+                raise errors_in_server.pop()
 
-
-    @mock_response(hp.GET, '/v2/currencies', mock_collection, warnings=[{'message':'foo','url':'bar'}])
+    @mock_response(hp.GET, '/v2/currencies', mock_collection,
+                   warnings=[{'message': 'foo', 'url': 'bar'}])
     def test_get_currencies(self):
         client = Client(api_key, api_secret)
         currencies = client.get_currencies()
@@ -464,9 +465,7 @@ class TestClient(unittest2.TestCase):
     @mock_response(hp.POST, '/v2/reports', mock_item)
     def test_create_report(self):
         client = Client(api_key, api_secret)
-        report = client.create_report(
-          email='example@coinbase.com', type='transactions'
-        )
+        report = client.create_report(email='example@coinbase.com', type='transactions')
         self.assertIsInstance(report, APIObject)
         self.assertIsInstance(report, Report)
         self.assertEqual(report, mock_item)
@@ -492,7 +491,11 @@ class TestClient(unittest2.TestCase):
         client = Client(api_key, api_secret)
         with self.assertRaises(ValueError):
             client.buy('foo')
-        for valid_kwargs in [{'amount': '1.0', 'payment_method': 'bar', 'currency': 'USD'}, {'total': '1.0', 'payment_method': 'bar', 'currency': 'USD'}]:
+        kwargs_list = [
+            {'amount': '1.0', 'payment_method': 'bar', 'currency': 'USD'},
+            {'total': '1.0', 'payment_method': 'bar', 'currency': 'USD'}
+        ]
+        for valid_kwargs in kwargs_list:
             buy = client.buy('foo', **valid_kwargs)
             self.assertIsInstance(buy, Buy)
             self.assertEqual(buy, mock_item)
@@ -525,7 +528,8 @@ class TestClient(unittest2.TestCase):
         client = Client(api_key, api_secret)
         with self.assertRaises(ValueError):
             client.sell('foo')
-        for valid_kwargs in [{'amount': '1.0', 'currency': 'USD'}, {'total': '1.0', 'currency': 'USD'}]:
+        for valid_kwargs in [{'amount': '1.0', 'currency': 'USD'},
+                             {'total': '1.0', 'currency': 'USD'}]:
             sell = client.sell('foo', **valid_kwargs)
             self.assertIsInstance(sell, Sell)
             self.assertEqual(sell, mock_item)
@@ -747,14 +751,17 @@ class TestClient(unittest2.TestCase):
     def test_callback_verification(self):
         client = Client(api_key, api_secret)
         signature = "6yQRl17CNj5YSHSpF+tLjb0vVsNVEv021Tyy1bTVEQ69SWlmhwmJYuMc7jiDyeW9TLy4vRqSh4g4YEyN8eoQIM57pMoNw6Lw6Oudubqwp+E3cKtLFxW0l18db3Z/vhxn5BScAutHWwT/XrmkCNaHyCsvOOGMekwrNO7mxX9QIx21FBaEejJeviSYrF8bG6MbmFEs2VGKSybf9YrElR8BxxNe/uNfCXN3P5tO8MgR5wlL3Kr4yq8e6i4WWJgD08IVTnrSnoZR6v8JkPA+fn7I0M6cy0Xzw3BRMJAvdQB97wkobu97gFqJFKsOH2u/JR1S/UNP26vL0mzuAVuKAUwlRn0SUhWEAgcM3X0UCtWLYfCIb5QqrSHwlp7lwOkVnFt329Mrpjy+jAfYYSRqzIsw4ZsRRVauy/v3CvmjPI9sUKiJ5l1FSgkpK2lkjhFgKB3WaYZWy9ZfIAI9bDyG8vSTT7IDurlUhyTweDqVNlYUsO6jaUa4KmSpg1o9eIeHxm0XBQ2c0Lv/T39KNc/VOAi1LBfPiQYMXD1e/8VuPPBTDGgzOMD3i334ppSr36+8YtApAn3D36Hr9jqAfFrugM7uPecjCGuleWsHFyNnJErT0/amIt24Nh1GoiESEq42o7Co4wZieKZ+/yeAlIUErJzK41ACVGmTnGoDUwEBXxADOdA="
-        body = '{"order":{"id":null,"created_at":null,"status":"completed","event":null,"total_btc":{"cents":100000000,"currency_iso":"BTC"},"total_native":{"cents":1000,"currency_iso":"USD"},"total_payout":{"cents":1000,"currency_iso":"USD"},"custom":"123456789","receive_address":"mzVoQenSY6RTBgBUcpSBTBAvUMNgGWxgJn","button":{"type":"buy_now","name":"Test Item","description":null,"id":null},"transaction":{"id":"53bdfe4d091c0d74a7000003","hash":"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b","confirmations":0}}}'.encode('utf-8')
+        body = '{"order":{"id":null,"created_at":null,"status":"completed","event":null,"total_btc":{"cents":100000000,"currency_iso":"BTC"},"total_native":{"cents":1000,"currency_iso":"USD"},"total_payout":{"cents":1000,"currency_iso":"USD"},"custom":"123456789","receive_address":"mzVoQenSY6RTBgBUcpSBTBAvUMNgGWxgJn","button":{"type":"buy_now","name":"Test Item","description":null,"id":null},"transaction":{"id":"53bdfe4d091c0d74a7000003","hash":"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b","confirmations":0}}}'.encode(
+            'utf-8')
         self.assertTrue(client.verify_callback(body, signature))
 
     def test_callback_verification_failure(self):
         client = Client(api_key, api_secret)
         signature = "6yQRl17CNj5YSHSpF+tLjb0vVsNVEv021Tyy1bTVEQ69SWlmhwmJYuMc7jiDyeW9TLy4vRqSh4g4YEyN8eoQIM57pMoNw6Lw6Oudubqwp+E3cKtLFxW0l18db3Z/vhxn5BScAutHWwT/XrmkCNaHyCsvOOGMekwrNO7mxX9QIx21FBaEejJeviSYrF8bG6MbmFEs2VGKSybf9YrElR8BxxNe/uNfCXN3P5tO8MgR5wlL3Kr4yq8e6i4WWJgD08IVTnrSnoZR6v8JkPA+fn7I0M6cy0Xzw3BRMJAvdQB97wkobu97gFqJFKsOH2u/JR1S/UNP26vL0mzuAVuKAUwlRn0SUhWEAgcM3X0UCtWLYfCIb5QqrSHwlp7lwOkVnFt329Mrpjy+jAfYYSRqzIsw4ZsRRVauy/v3CvmjPI9sUKiJ5l1FSgkpK2lkjhFgKB3WaYZWy9ZfIAI9bDyG8vSTT7IDurlUhyTweDqVNlYUsO6jaUa4KmSpg1o9eIeHxm0XBQ2c0Lv/T39KNc/VOAi1LBfPiQYMXD1e/8VuPPBTDGgzOMD3i334ppSr36+8YtApAn3D36Hr9jqAfFrugM7uPecjCGuleWsHFyNnJErT0/amIt24Nh1GoiESEq42o7Co4wZieKZ+/yeAlIUErJzK41ACVGmTnGoDUwEBXxADOdA="
-        body = '{"order":{"id":null,"created_at":null,"status":"completed","event":null,"total_btc":{"cents":1000000000,"currency_iso":"BTC"},"total_native":{"cents":1000,"currency_iso":"USD"},"total_payout":{"cents":1000,"currency_iso":"USD"},"custom":"123456789","receive_address":"mzVoQenSY6RTBgBUcpSBTBAvUMNgGWxgJn","button":{"type":"buy_now","name":"Test Item","description":null,"id":null},"transaction":{"id":"53bdfe4d091c0d74a7000003","hash":"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b","confirmations":0}}}'.encode('utf-8')
+        body = '{"order":{"id":null,"created_at":null,"status":"completed","event":null,"total_btc":{"cents":1000000000,"currency_iso":"BTC"},"total_native":{"cents":1000,"currency_iso":"USD"},"total_payout":{"cents":1000,"currency_iso":"USD"},"custom":"123456789","receive_address":"mzVoQenSY6RTBgBUcpSBTBAvUMNgGWxgJn","button":{"type":"buy_now","name":"Test Item","description":null,"id":null},"transaction":{"id":"53bdfe4d091c0d74a7000003","hash":"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b","confirmations":0}}}'.encode(
+            'utf-8')
         self.assertFalse(client.verify_callback(body, signature))
+
 
 class TestOauthClient(unittest2.TestCase):
     def test_oauth_details_required(self):
@@ -778,7 +785,8 @@ class TestOauthClient(unittest2.TestCase):
         server_response_data = {
             'access_token': 'newaccesstoken',
             'refresh_token': 'newrefreshtoken',
-          }
+        }
+
         def server_response(request, uri, headers):
             parsed_uri = urlparse(uri)
             parsed_reference = urlparse(new_api_base)
@@ -795,7 +803,8 @@ class TestOauthClient(unittest2.TestCase):
         client = OAuthClient(access_token, refresh_token)
         with self.assertRaises(AssertionError):
             client.refresh()
-            if errors_in_server: raise errors_in_server.pop()
+            if errors_in_server:
+                raise errors_in_server.pop()
 
         client2 = OAuthClient(
             access_token,
@@ -820,41 +829,48 @@ class TestOauthClient(unittest2.TestCase):
 
     @hp.activate
     def test_response_handling(self):
-        resp200 = lambda r, u, h: (200, h, '{}')
-        resp400 = lambda r, u, h: (400, h, '{}')
+        def resp200(r, u, h): return (200, h, '{}')
+
+        def resp400(r, u, h): return (400, h, '{}')
         header_template = (
             'Bearer realm="Doorkeeper" error="{error}" error_description="{message}"')
+
         def resp401_revoked(request, uri, headers):
             error_data = {
                 'error': 'revoked_token',
                 'message': 'The access token has been revoked',
-              }
+            }
             headers.update({'www-authenticate': header_template.format(**error_data)})
             return (401, headers, json.dumps(error_data))
+
         def resp401_expired(request, uri, headers):
             error_data = {
                 'error': 'expired_token',
                 'message': 'The access token expired',
-              }
+            }
             headers.update({'www-authenticate': header_template.format(**error_data)})
             return (401, headers, json.dumps(error_data))
+
         def resp401_invalid(request, uri, headers):
             error_data = {
                 'error': 'invalid_token',
                 'message': 'The access token is invalid',
-              }
+            }
             headers.update({'www-authenticate': header_template.format(**error_data)})
             return (401, headers, json.dumps(error_data))
+
         def resp401_generic(request, uri, headers):
             error_data = {
                 'error': 'some_error',
                 'message': 'Some description',
-              }
+            }
             headers.update({'www-authenticate': header_template.format(**error_data)})
             return (401, headers, json.dumps(error_data))
+
         def resp401_nobody(request, uri, headers):
             return (401, headers, '{}')
-        resp402 = lambda r, u, h: (402, h, '{}')
+
+        def resp402(r, u, h): return (402, h, '{}')
 
         hp.register_uri(hp.GET, re.compile('.*200$'), resp200)
         hp.register_uri(hp.GET, re.compile('.*400$'), resp400)
@@ -881,4 +897,3 @@ class TestOauthClient(unittest2.TestCase):
             client._get('401_nobody')
         with self.assertRaises(TwoFactorRequiredError):
             client._get('402')
-

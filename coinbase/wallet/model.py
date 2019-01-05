@@ -110,7 +110,7 @@ class APIObject(dict):
             return data[key]
         return dict.__getitem__(self, key)
 
-    def __dir__(self): # pragma: no cover
+    def __dir__(self):  # pragma: no cover
         # This makes tab completion work in interactive shells like IPython for all
         # attributes, items, and methods.
         return list(self.keys())
@@ -122,10 +122,10 @@ class APIObject(dict):
             return '(invalid JSON)'
 
     def __name__(self):
-        return '<{} @ {}>'.format(type(self).__name__, hex(id(self))) # pragma: no cover
+        return '<{} @ {}>'.format(type(self).__name__, hex(id(self)))  # pragma: no cover
 
     def __repr__(self):
-        return '{} {}'.format(self.__name__(), str(self)) # pragma: no cover
+        return '{} {}'.format(self.__name__(), str(self))  # pragma: no cover
 
 
 class Account(APIObject):
@@ -271,9 +271,13 @@ class Account(APIObject):
         """https://developers.coinbase.com/api/v2#commit-a-withdrawal"""
         return self.api_client.commit_withdrawal(self.id, withdrawal_id, **params)
 
-class Notification(APIObject): pass
 
-class Address(APIObject): pass
+class Notification(APIObject):
+    pass
+
+
+class Address(APIObject):
+    pass
 
 
 class Checkout(APIObject):
@@ -286,7 +290,8 @@ class Checkout(APIObject):
         return self.api_client.create_checkout_order(self.id, **params)
 
 
-class Merchant(APIObject): pass
+class Merchant(APIObject):
+    pass
 
 
 class Money(APIObject):
@@ -309,7 +314,8 @@ class Order(APIObject):
         return data
 
 
-class PaymentMethod(APIObject): pass
+class PaymentMethod(APIObject):
+    pass
 
 
 class Transaction(APIObject):
@@ -329,7 +335,8 @@ class Transaction(APIObject):
         return self.api_client._make_api_object(response, APIObject)
 
 
-class Report(APIObject): pass
+class Report(APIObject):
+    pass
 
 
 class Transfer(APIObject):
@@ -339,13 +346,25 @@ class Transfer(APIObject):
         self.update(data)
         return data
 
-class Buy(Transfer): pass
-class Sell(Transfer): pass
-class Deposit(Transfer): pass
-class Withdrawal(Transfer): pass
+
+class Buy(Transfer):
+    pass
 
 
-class User(APIObject): pass
+class Sell(Transfer):
+    pass
+
+
+class Deposit(Transfer):
+    pass
+
+
+class Withdrawal(Transfer):
+    pass
+
+
+class User(APIObject):
+    pass
 
 
 class CurrentUser(User):
@@ -374,7 +393,7 @@ _resource_to_model = {
     'transfer': Transfer,
     'user': User,
     'withdrawal': Withdrawal,
-  }
+}
 _obj_keys_to_model = {
     frozenset(('amount', 'currency')): Money,
-  }
+}

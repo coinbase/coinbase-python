@@ -24,7 +24,7 @@ def mock_response(method, uri, data, errors=None, warnings=None, pagination=None
             if pagination is not None:
                 body['pagination'] = pagination
             hp.reset()
-            hp.register_uri(method, re.compile('.*'+uri+'$'), json.dumps(body))
+            hp.register_uri(method, re.compile('.*' + uri + '$'), json.dumps(body))
             return fn(*args, **kwargs)
         return inner
     return wrapper
