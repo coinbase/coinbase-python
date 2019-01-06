@@ -9,6 +9,7 @@ import json
 import six
 import unittest2
 import warnings
+from requests.models import Response
 
 from coinbase.wallet.model import APIObject
 from coinbase.wallet.model import new_api_object
@@ -54,7 +55,7 @@ class TestNewApiObject(unittest2.TestCase):
         self.assertIsNone(obj.pagination)
         self.assertIsNone(obj.warnings)
 
-        def response(x): return x
+        response = Response()
 
         def pagination(x): return x
 
