@@ -6,10 +6,10 @@ from __future__ import unicode_literals
 
 import copy
 import json
+from requests.models import Response
 import six
 import unittest2
 import warnings
-from requests.models import Response
 
 from coinbase.wallet.model import APIObject
 from coinbase.wallet.model import new_api_object
