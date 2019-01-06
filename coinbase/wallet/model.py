@@ -7,6 +7,8 @@ from __future__ import unicode_literals
 import json
 import six
 
+from coinbase.wallet.compat import urlsplit
+
 
 def new_api_object(client, obj, cls=None, **kwargs):
     if isinstance(obj, dict):
@@ -38,12 +40,15 @@ class APIObject(dict):
     the appropriate Python models.
     """
     __api_client = None
+    __resource_path = None
     __response = None
     __pagination = None
     __warnings = None
 
     def __init__(self, api_client, response=None, pagination=None, warnings=None):
         self.__api_client = api_client
+        if response:
+            self.__resource_path = urlsplit(response.url).path
         self.__response = response
         self.__pagination = pagination
         self.__warnings = warnings
@@ -51,6 +56,10 @@ class APIObject(dict):
     @property
     def api_client(self):
         return self.__api_client
+
+    @property
+    def resource_path(self):
+        return self.__resource_path
 
     @property
     def response(self):

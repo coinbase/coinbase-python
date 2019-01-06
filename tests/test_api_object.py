@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 import copy
 import json
+from requests.models import Response
 import six
 import unittest2
 import warnings
@@ -54,7 +55,7 @@ class TestNewApiObject(unittest2.TestCase):
         self.assertIsNone(obj.pagination)
         self.assertIsNone(obj.warnings)
 
-        def response(x): return x
+        response = Response()
 
         def pagination(x): return x
 
