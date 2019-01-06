@@ -4,6 +4,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from requests.compat import json
+
 
 class CoinbaseError(Exception):
     """Base error class for all exceptions raised in this library.
@@ -83,6 +85,10 @@ class InternalServerError(APIError):
     pass
 
 
+class BadGatewayError(APIError):
+    pass
+
+
 class ServiceUnavailableError(APIError):
     pass
 
@@ -91,7 +97,10 @@ def build_api_error(response, blob=None):
     """Helper method for creating errors and attaching HTTP response/request
     details to them.
     """
-    blob = blob or response.json()
+    try:
+        blob = blob or response.json()
+    except json.JSONDecodeError:
+        blob = {}
     error_list = blob.get('errors', None)
     error = (error_list[0] if error_list else {})
     if error:
@@ -135,5 +144,6 @@ _status_code_to_class = {
     422: ValidationError,
     429: RateLimitExceededError,
     500: InternalServerError,
+    502: BadGatewayError,
     503: ServiceUnavailableError,
 }
